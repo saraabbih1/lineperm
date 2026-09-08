@@ -1,23 +1,23 @@
+package ma.youcode.lineperm.model;
 
- package ma.youcode.lineperm.model;
-public class User{
-    private final String login;
-    private final String passwordhash;
+public class User {
 
-    public User(String login,String passwordhash){
-      this.login = login ;
-      this.passwordhash = passwordhash ;
+    private String login;
+    private String passwordHash;
 
+    public User(String login, String passwordHash) {
+
+        this.login = login;
+        this.passwordHash = passwordHash;
     }
 
-    public String getLogin(){
+    public String getLogin() {
+
         return login;
     }
 
-    public String getPasswordhash(){
-        return passwordhash;
+    public String getPasswordHash() {
+
+        return passwordHash;
     }
-
 }
-
-
