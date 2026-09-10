@@ -2,12 +2,14 @@ package ma.youcode.lineperm.ui;
 import java.util.Scanner;
 import ma.youcode.lineperm.model.User;
 import ma.youcode.lineperm.service.UserService;
+import ma.youcode.lineperm.service.FileService;
 
 
 public class ConsoleApp {
 
 
     private UserService userService;
+    private FileService fileService;
     private Scanner scanner;
     public boolean run ;
     public User conectUser;
@@ -15,12 +17,14 @@ public class ConsoleApp {
     public ConsoleApp() {
 
         userService = new UserService();
+         fileService = new FileService();
         scanner = new Scanner(System.in);
     }
 
     public void demarrer() {
         run=true;
              userService.charger();
+             fileService.charger();
 
 
         System.out.println("LinePermission");
@@ -31,8 +35,8 @@ public class ConsoleApp {
             
          String comnd=scanner.nextLine().trim().toLowerCase();
 switch(comnd){
-     case "singup":
-        singup();
+     case "singnup":
+        singnup();
         break;
         case "login":
             login();
@@ -54,7 +58,7 @@ switch(comnd){
 
         // System.out.println("create sarra " + result);
     }
-    public void singup(){
+    public void singnup(){
         if(conectUser!=null){
             System.out.println("deja il ya un utilisateur conecter ");
             return;
@@ -92,13 +96,13 @@ switch(comnd){
     User user =
             userService.authentification(login, password);
 
-            conectUser=user;
+       
 
     if (user == null) {
         System.out.println("identifiants incorrects.");
         return;
     }  
-
+     conectUser=user;
  }
  private void printPrompt() {
 
