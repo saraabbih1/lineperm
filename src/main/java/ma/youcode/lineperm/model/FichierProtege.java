@@ -20,6 +20,10 @@ public class FichierProtege {
                             this.ownerRead=ownerRead;
                             this.ownerWrite=ownerWrite;
                             this.ownerDelete=ownerDelete;
+                            this.otherRead=otherRead;
+                            this.otherWrite=otherWrite;
+                            this.otherDelete=otherDelete;
+
 
                           }
 
