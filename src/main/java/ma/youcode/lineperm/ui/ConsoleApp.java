@@ -31,12 +31,12 @@ public class ConsoleApp {
             
          String comnd=scanner.nextLine().trim().toLowerCase();
 switch(comnd){
-     case "singin":
-        singin();
+     case "singup":
+        singup();
         break;
         case "login":
             login();
-            
+
             break;
 
             case "logout":
@@ -54,7 +54,7 @@ switch(comnd){
 
         // System.out.println("create sarra " + result);
     }
-    public void singin(){
+    public void singup(){
         if(conectUser!=null){
             System.out.println("deja il ya un utilisateur conecter ");
             return;
@@ -92,6 +92,8 @@ switch(comnd){
     User user =
             userService.authentification(login, password);
 
+            conectUser=user;
+
     if (user == null) {
         System.out.println("identifiants incorrects.");
         return;
@@ -120,7 +122,7 @@ private void Logout() {
 
     conectUser = null;
 
-    System.out.println("Deconnexion reussie.");
+    System.out.println("Deconnexion reussie."); 
 }
 }
 
