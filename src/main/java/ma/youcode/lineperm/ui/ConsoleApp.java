@@ -36,6 +36,7 @@ switch(comnd){
         break;
         case "login":
             login();
+            
             break;
 
             case "logout":
