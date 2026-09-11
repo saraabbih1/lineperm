@@ -228,4 +228,53 @@ public void charger(){
         return true;
     }
 
+
+    private String permissionsOwner(FichierProtege fichier) {
+
+        return ""
+                + (fichier.isOwnerRead() ? "r" : "-")
+                + (fichier.isOwnerWrite() ? "w" : "-")
+                + (fichier.isOwnerDelete() ? "d" : "-");
+    }
+
+    private String permissionsOthers(FichierProtege fichier) {
+
+        return ""
+                + (fichier.isOtherRead() ? "r" : "-")
+                + (fichier.isOtherWrite() ? "w" : "-")
+                + (fichier.isOtherDelete() ? "d" : "-");
+    }
+
+    // sauvgrader
+
+     private void sauvegarder() {
+
+        List<String> lines = new ArrayList<>();
+
+        for (FichierProtege fichier : fichiers.values()) {
+
+            String line =
+                    fichier.getNom()
+                    + ";"
+                    + fichier.getProprietaire()
+                    + ";"
+                    + permissionsOwner(fichier)
+                    + ";"
+                    + permissionsOthers(fichier);
+
+            lines.add(line);
+        }
+
+        try {
+
+            Files.createDirectories(fichiersPath.getParent());
+
+            Files.write(fichiersPath, lines);
+
+        } catch (IOException e) {
+
+            System.out.println("Erreur lors de la sauvegarde.");
+        }
+    }
+
 }
