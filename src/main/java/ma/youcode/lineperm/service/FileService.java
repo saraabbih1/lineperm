@@ -1,5 +1,6 @@
 package ma.youcode.lineperm.service;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -73,5 +74,43 @@ public void charger(){
             return false;
         }
         return !nom.contains("/")&&!nom.contains("\\")&&!nom.contains(";");
+    }
+
+
+
+
+    // creation de fichier 
+
+     public boolean creer(String nom, String proprietaire) {
+
+        if (!nomValide(nom)) {
+            return false;
+        }
+
+        if (fichiers.containsKey(nom)) {
+            return false;
+        }
+
+        FichierProtege fichier =
+                new FichierProtege(nom, proprietaire);
+
+        try {
+
+            Files.createDirectories(dataPath);
+
+            Path contenuPath = dataPath.resolve(nom);
+
+            Files.writeString(contenuPath, "");
+
+            fichiers.put(nom, fichier);
+
+            sauvegarder();
+
+            return true;
+
+        } catch (IOException e) {
+
+            return false;
+        }
     }
 }
