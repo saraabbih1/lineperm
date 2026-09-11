@@ -204,7 +204,7 @@ private void ls() {
                 + (fichier.isOtherDelete() ? "d" : "-");
     }
 
-    
+
      private void touch() {
 
         if (conectUser == null) {
@@ -226,6 +226,35 @@ private void ls() {
         } else {
             System.out.println("Impossible de creer le fichier.");
         }
+    }
+
+     private void cat() {
+
+        if (conectUser == null) {
+            System.out.println("Permission denied.");
+            return;
+        }
+
+        System.out.print("Nom du fichier : ");
+        String nom = scanner.nextLine();
+
+        if (!fileService.existe(nom)) {
+            System.out.println("Fichier introuvable.");
+            return;
+        }
+
+        String contenu =
+                fileService.lire(
+                        conectUser.getLogin(),
+                        nom
+                );
+
+        if (contenu == null) {
+            System.out.println("Permission denied.");
+            return;
+        }
+
+        System.out.println(contenu);
     }
 }
 
