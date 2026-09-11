@@ -153,4 +153,40 @@ public void charger(){
             return null;
         }
     }
+
+    // nano 
+
+    public boolean ecrire(
+            String login,
+            String nom,
+            String contenu) {
+
+        FichierProtege fichier = fichiers.get(nom);
+
+        if (fichier == null) {
+            return false;
+        }
+
+        if (!ControleAcces.estAutorise(login, fichier, 'w')) {
+            return false;
+        }
+
+        try {
+
+            Files.createDirectories(dataPath);
+
+            Path contenuPath = dataPath.resolve(nom);
+
+            Files.writeString(contenuPath, contenu);
+
+            sauvegarder();
+
+            return true;
+
+        } catch (IOException e) {
+
+            return false;
+        }
+    }
+
 }
