@@ -28,7 +28,13 @@ public class FichierProtege {
                           }
 
     public FichierProtege(String nom,String proprietaire){
-        this(nom,proprietaire,true,true,true,false,false,false);
+        this(nom,proprietaire,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false);
     } 
    public String getNom() {
     return nom;
@@ -62,7 +68,12 @@ public boolean isOtherDelete() {
     return otherDelete;
 }
 
+public void setOtherWrite(boolean  otherWrite){
+    this.otherWrite = otherWrite;
+}
     
-   
+   public void setOtherDelete(boolean  otherDelete){
+    this.otherDelete = otherDelete;
+   }
     
 }

@@ -1,16 +1,16 @@
 package ma.youcode.lineperm.ui;
 import java.util.Scanner;
 import ma.youcode.lineperm.model.User;
-import ma.youcode.lineperm.service.UserService;
 import ma.youcode.lineperm.service.FileService;
+import ma.youcode.lineperm.service.UserService;
 
 
 public class ConsoleApp {
 
 
-    private UserService userService;
-    private FileService fileService;
-    private Scanner scanner;
+    private final UserService userService;
+    private final FileService fileService;
+    private final Scanner scanner;
     public boolean run ;
     public User conectUser;
 
@@ -24,7 +24,7 @@ public class ConsoleApp {
     public void demarrer() {
         run=true;
              userService.charger();
-             fileService.charger();
+             //fileService.charger();
 
 
         System.out.println("LinePermission");
@@ -34,7 +34,7 @@ public class ConsoleApp {
             printPrompt();
             
          String comnd=scanner.nextLine().trim().toLowerCase();
-switch(comnd){
+   switch(comnd){
      case "singnup":
         singnup();
         break;
