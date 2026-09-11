@@ -188,6 +188,21 @@ private void ls() {
         }
     }
 
+     private String permissionOwner(FichierProtege fichier) {
 
+        return ""
+                + (fichier.isOwnerRead() ? "r" : "-")
+                + (fichier.isOwnerWrite() ? "w" : "-")
+                + (fichier.isOwnerDelete() ? "d" : "-");
+    }
+
+     private String permissionOthers(FichierProtege fichier) {
+
+        return ""
+                + (fichier.isOtherRead() ? "r" : "-")
+                + (fichier.isOtherWrite() ? "w" : "-")
+                + (fichier.isOtherDelete() ? "d" : "-");
+    }
+    
 }
 
