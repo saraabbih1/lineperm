@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import ma.youcode.lineperm.access.ControleAcces;
 import ma.youcode.lineperm.model.FichierProtege;
 
 
@@ -111,6 +113,44 @@ public void charger(){
         } catch (IOException e) {
 
             return false;
+        }
+    }
+
+
+    //existe 
+
+     public boolean existe(String nom) {
+
+        return fichiers.containsKey(nom);
+    }
+
+
+    //cat
+      public String lire(String login, String nom) {
+
+        FichierProtege fichier = fichiers.get(nom);
+
+        if (fichier == null) {
+            return null;
+        }
+
+        if (!ControleAcces.estAutorise(login, fichier, 'r')) {
+            return null;
+        }
+
+        try {
+
+            Path contenuPath = dataPath.resolve(nom);
+
+            if (!Files.exists(contenuPath)) {
+                return "";
+            }
+
+            return Files.readString(contenuPath);
+
+        } catch (IOException e) {
+
+            return null;
         }
     }
 }
