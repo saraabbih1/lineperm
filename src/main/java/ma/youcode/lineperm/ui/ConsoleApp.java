@@ -24,7 +24,7 @@ public class ConsoleApp {
     public void demarrer() {
         run=true;
              userService.charger();
-             //fileService.charger();
+             fileService.charger();
 
 
         System.out.println("LinePermission");
@@ -50,8 +50,37 @@ public class ConsoleApp {
     case "exit":
         run=false;
         System.out.println("okeee by arras");
-        break;
+    case "ls -l":
+                    ls();
+                    break;
 
+              
+                case "touch":
+                    touch();
+                    break;
+
+                case "cat":
+                    cat();
+                    break;
+
+              
+                case "nano":
+                    nano();
+                    break;
+
+                case "chmod":
+                    chmod();
+                    break;
+
+                     case "exit":
+                    run = false;
+                    System.out.println("okeee by arras");
+                    break;
+
+                default:
+                    System.out.println("Commande inconnue.");
+                    break;
+   
 }
             }
     // boolean result = userService.createUser("sarra", "1234");
