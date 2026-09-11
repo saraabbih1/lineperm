@@ -189,4 +189,43 @@ public void charger(){
         }
     }
 
+    // chmod
+      public boolean chmod(
+            String login,
+            char droit,
+            boolean ajouter,
+            String nom) {
+
+        FichierProtege fichier = fichiers.get(nom);
+
+        if (fichier == null) {
+            return false;
+        }
+
+   
+        if (!login.equals(fichier.getProprietaire())) {
+            return false;
+        }
+
+        if (droit == 'r') {
+            fichier.setOtherRead(ajouter);
+        }
+
+        else if (droit == 'w') {
+            fichier.setOtherWrite(ajouter);
+        }
+
+        else if (droit == 'd') {
+            fichier.setOtherDelete(ajouter);
+        }
+
+        else {
+            return false;
+        }
+
+        sauvegarder();
+
+        return true;
+    }
+
 }
