@@ -203,6 +203,29 @@ private void ls() {
                 + (fichier.isOtherWrite() ? "w" : "-")
                 + (fichier.isOtherDelete() ? "d" : "-");
     }
+
     
+     private void touch() {
+
+        if (conectUser == null) {
+            System.out.println("Permission denied.");
+            return;
+        }
+
+        System.out.print("Nom du fichier : ");
+        String nom = scanner.nextLine();
+
+        boolean resultat =
+                fileService.creer(
+                        nom,
+                        conectUser.getLogin()
+                );
+
+        if (resultat) {
+            System.out.println("Fichier cree.");
+        } else {
+            System.out.println("Impossible de creer le fichier.");
+        }
+    }
 }
 
