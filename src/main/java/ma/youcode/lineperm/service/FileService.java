@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import ma.youcode.lineperm.access.ControleAcces;
 import ma.youcode.lineperm.model.FichierProtege;
 
@@ -19,18 +18,19 @@ public class FileService {
 
 private Map<String, FichierProtege> fichiers = new HashMap<>();
 private final Path fichiersPath = Path.of("src/main/resources/files.txt");
-Path path = Path.of("data");
+private final Path dataPath = Path.of("data");
+
 public void charger(){
     fichiers.clear();
 
 
-   if(!Files.exists(path)){
+   if(!Files.exists(fichiersPath)){
     return;
    }
    try {
-        List<String> lines = Files.readAllLines(path);
+        List<String> lines = Files.readAllLines(fichiersPath);
         for(String Line : lines){
-            String parts[] = Line.split(";" , 2);
+            String parts[] = Line.split(";" );
            String nom= parts[0];
            String proprietaire=parts[1];
 
