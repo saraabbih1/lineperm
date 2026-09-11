@@ -1,5 +1,7 @@
 package ma.youcode.lineperm.ui;
 import java.util.Scanner;
+
+import ma.youcode.lineperm.model.FichierProtege;
 import ma.youcode.lineperm.model.User;
 import ma.youcode.lineperm.service.FileService;
 import ma.youcode.lineperm.service.UserService;
@@ -157,5 +159,35 @@ private void Logout() {
 
     System.out.println("Deconnexion reussie."); 
 }
+
+
+private void ls() {
+
+        if (conectUser == null) {
+            System.out.println("Permission denied.");
+            return;
+        }
+
+        for (FichierProtege fichier : fileService.lister()) {
+
+            String ownerPermissions =
+                    permissionOwner(fichier);
+
+            String otherPermissions =
+                    permissionOthers(fichier);
+
+            System.out.println(
+                    ownerPermissions
+                    + "|"
+                    + otherPermissions
+                    + " "
+                    + fichier.getProprietaire()
+                    + " "
+                    + fichier.getNom()
+            );
+        }
+    }
+
+
 }
 
