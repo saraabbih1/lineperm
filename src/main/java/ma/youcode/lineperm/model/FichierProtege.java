@@ -68,6 +68,9 @@ public boolean isOtherDelete() {
     return otherDelete;
 }
 
+public void setOtherRead(boolean otherRead) {
+    this.otherRead = otherRead;
+}
 public void setOtherWrite(boolean  otherWrite){
     this.otherWrite = otherWrite;
 }

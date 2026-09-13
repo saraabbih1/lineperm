@@ -277,4 +277,19 @@ public void charger(){
         }
     }
 
+    public boolean peutEcrire(String login, String nom) {
+
+    FichierProtege fichier = fichiers.get(nom);
+
+    if (fichier == null) {
+        return false;
+    }
+
+    return ControleAcces.estAutorise(
+            login,
+            fichier,
+            'w'
+    );
+}
+
 }

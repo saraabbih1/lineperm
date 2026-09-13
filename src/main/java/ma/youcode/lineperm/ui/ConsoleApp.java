@@ -1,6 +1,5 @@
 package ma.youcode.lineperm.ui;
 import java.util.Scanner;
-
 import ma.youcode.lineperm.model.FichierProtege;
 import ma.youcode.lineperm.model.User;
 import ma.youcode.lineperm.service.FileService;
@@ -72,11 +71,6 @@ public class ConsoleApp {
 
                 case "chmod":
                     chmod();
-                    break;
-
-                     case "exit":
-                    run = false;
-                    System.out.println("okeee by arras");
                     break;
 
                 default:
@@ -256,5 +250,135 @@ private void ls() {
 
         System.out.println(contenu);
     }
+
+ private void nano() {
+
+        if (conectUser == null) {
+            System.out.println("Permission denied.");
+            return;
+        }
+
+        System.out.print("Nom du fichier : ");
+        String nom = scanner.nextLine();
+
+        if (!fileService.existe(nom)) {
+            System.out.println("Fichier introuvable.");
+            return;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        if (!fileService.peutEcrire(
+                conectUser.getLogin(),
+                nom)) {
+
+            System.out.println("Permission denied.");
+            return;
+        }
+
+        System.out.println(
+                "Ecrivez le contenu. Tapez EOF pour terminer."
+        );
+
+        StringBuilder contenu = new StringBuilder();
+
+        while (true) {
+
+            String ligne = scanner.nextLine();
+
+            if (ligne.equals("EOF")) {
+                break;
+            }
+
+            contenu.append(ligne);
+            contenu.append("\n");
+        }
+
+        boolean resultat =
+                fileService.ecrire(
+                        conectUser.getLogin(),
+                        nom,
+                        contenu.toString()
+                );
+
+        if (resultat) {
+            System.out.println("Fichier modifie.");
+        } else {
+            System.out.println("Permission denied.");
+        }
+    }
+
+
+  
+    private void chmod() {
+
+        if (conectUser == null) {
+            System.out.println("Permission denied.");
+            return;
+        }
+
+        System.out.print(
+                "Droit (r/w/d ou -r/-w/-d) : "
+        );
+
+        String droitCommande = scanner.nextLine().trim();
+
+        if (droitCommande.length() != 2) {
+            System.out.println("Commande chmod invalide.");
+            return;
+        }
+
+        boolean ajouter;
+
+        if (droitCommande.charAt(0) == '-') {
+            ajouter = false;
+        } else {
+            ajouter = true;
+        }
+
+        char droit;
+
+        if (ajouter) {
+            droit = droitCommande.charAt(0);
+        } else {
+            droit = droitCommande.charAt(1);
+        }
+
+        if (droit != 'r'
+                && droit != 'w'
+                && droit != 'd') {
+
+            System.out.println("Commande chmod invalide.");
+            return;
+        }
+
+        System.out.print("Nom du fichier : ");
+        String nom = scanner.nextLine();
+
+        boolean resultat =
+                fileService.chmod(
+                        conectUser.getLogin(),
+                        droit,
+                        ajouter,
+                        nom
+                );
+
+        if (resultat) {
+            System.out.println("Permission modifiee.");
+        } else {
+            System.out.println("Permission denied.");
+        }
+    }
+    
 }
 
