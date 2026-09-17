@@ -37,7 +37,7 @@ public class ConsoleApp {
          String comnd=scanner.nextLine().trim().toLowerCase();
    switch(comnd){
      case "singnup":
-        singnup();
+        signup();
         break;
         case "login":
             login();
@@ -51,6 +51,7 @@ public class ConsoleApp {
     case "exit":
         run=false;
         System.out.println("okeee by arras");
+        break;
     case "ls -l":
                     ls();
                     break;
@@ -83,7 +84,7 @@ public class ConsoleApp {
 
         // System.out.println("create sarra " + result);
     }
-    public void singnup(){
+    public void signup(){
         if(conectUser!=null){
             System.out.println("deja il ya un utilisateur conecter ");
             return;
@@ -265,19 +266,6 @@ private void ls() {
             System.out.println("Fichier introuvable.");
             return;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-        
         if (!fileService.peutEcrire(
                 conectUser.getLogin(),
                 nom)) {
