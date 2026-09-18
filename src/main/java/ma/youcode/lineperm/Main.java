@@ -1,7 +1,5 @@
 package ma.youcode.lineperm;
 import java.io.IOException;
-import java.util.List;
-import ma.youcode.lineperm.model.LogEntry;
 import ma.youcode.lineperm.service.LogService;
 import ma.youcode.lineperm.ui.ConsoleApp;
 
@@ -10,9 +8,13 @@ public class Main {
     public static void main(String[] args) throws IOException {
         LogService logService = new LogService();
 
-        List<LogEntry> logs = logService.charger();
+//         List<LogEntry> logs = logService.charger();
 
-        System.out.println(logs.size());
+//         System.out.println(logs.size());
+//         LogAnalyzer analyzer = new LogAnalyzer(logs);
+
+// System.out.println(analyzer.nombreTotalLog());
+// System.out.println(analyzer.nombredeLogUser("sarra"));
 
         ConsoleApp app = new ConsoleApp();
         

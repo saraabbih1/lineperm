@@ -1,10 +1,14 @@
 package ma.youcode.lineperm.ui;
+import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 import ma.youcode.lineperm.model.FichierProtege;
+import ma.youcode.lineperm.model.LogEntry;
 import ma.youcode.lineperm.model.User;
 import ma.youcode.lineperm.service.FileService;
+import ma.youcode.lineperm.service.LogAnalyzer;
+import ma.youcode.lineperm.service.LogService;
 import ma.youcode.lineperm.service.UserService;
-
 
 public class ConsoleApp {
 
@@ -14,18 +18,24 @@ public class ConsoleApp {
     private final Scanner scanner;
     public boolean run ;
     public User conectUser;
+    private  final LogService logService;
+    private LogAnalyzer logAnalyzer;
 
     public ConsoleApp() {
 
         userService = new UserService();
          fileService = new FileService();
         scanner = new Scanner(System.in);
+        logService=new LogService();
     }
 
-    public void demarrer() {
+    public void demarrer() throws IOException {
         run=true;
              userService.charger();
              fileService.charger();
+
+             List<LogEntry> logs = logService.charger();
+             logAnalyzer = new LogAnalyzer(logs);
 
 
         System.out.println("LinePermission");
@@ -83,6 +93,14 @@ public class ConsoleApp {
     // boolean result = userService.createUser("sarra", "1234");
 
         // System.out.println("create sarra " + result);
+    }
+    private void stats(){
+        System.out.println("nombre total de logs est:" + logAnalyzer.nombreTotalLog());
+
+        System.out.println("utilisateur: ");
+        String user =scanner.nextLine();
+
+        System.out.println("nombre de logs pour" + user + " : " + logAnalyzer.nombredeLogUser(user));
     }
     public void signup(){
         if(conectUser!=null){
@@ -321,10 +339,11 @@ private void ls() {
 
         String droitCommande = scanner.nextLine().trim();
 
-        if (droitCommande.length() != 2) {
-            System.out.println("Commande chmod invalide.");
-            return;
-        }
+        if (droitCommande.length() != 1
+        && droitCommande.length() != 2) {
+    System.out.println("Commande chmod invalide.");
+    return;
+}
 
         boolean ajouter;
 

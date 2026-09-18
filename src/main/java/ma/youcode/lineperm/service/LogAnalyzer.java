@@ -1,7 +1,6 @@
 package ma.youcode.lineperm.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import ma.youcode.lineperm.model.LogEntry;
 
 public class LogAnalyzer {
@@ -14,10 +13,10 @@ public class LogAnalyzer {
     public long nombreTotalLog(){
         return logs.stream().count();
     }
-    public long nombreLongParUser(String user){
-        return logs.stream().filter(log->log.getUser().equals(user)).count();
+
+    public long nombredeLogUser(String user){
+        return logs .stream().filter(log->log.getUser().equals(user)).count();
     }
-    public List<LogEntry> logsParAction(String action){
-        return logs.stream().filter(log->log.getAction().equals(action)).collect(Collectors.toList());
-    }
+
+    
 }
