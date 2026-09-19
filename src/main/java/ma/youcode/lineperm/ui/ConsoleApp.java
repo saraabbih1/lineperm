@@ -12,7 +12,7 @@ public class ConsoleApp {
     private final UserService userService;
     private final FileService fileService;
     private final Scanner scanner;
-    public boolean run ;
+    public boolean run=true ;
     public User conectUser;
 
     public ConsoleApp() {
@@ -23,7 +23,6 @@ public class ConsoleApp {
     }
 
     public void demarrer() {
-        run=true;
              userService.charger();
              fileService.charger();
 
@@ -268,15 +267,6 @@ private void ls() {
 
 
 
-
-
-
-
-
-
-
-
-
         
         if (!fileService.peutEcrire(
                 conectUser.getLogin(),
@@ -333,7 +323,7 @@ private void ls() {
 
         String droitCommande = scanner.nextLine().trim();
 
-        if (droitCommande.length() != 2) {
+        if (droitCommande.length() != 1 && droitCommande.length() !=2) {
             System.out.println("Commande chmod invalide.");
             return;
         }

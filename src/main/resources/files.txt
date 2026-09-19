@@ -1,2 +1,3 @@
 test.txt;sarra;rwd;---
 document.txt;sarra;rwd;---
+bou.txt;bouchra;rwd;r--
