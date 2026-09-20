@@ -83,6 +83,8 @@ public class ConsoleApp {
                 case "chmod":
                     chmod();
                     break;
+                 case "stats":
+                  stats();
 
                 default:
                     System.out.println("Commande inconnue.");
