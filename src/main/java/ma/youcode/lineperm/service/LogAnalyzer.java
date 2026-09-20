@@ -38,5 +38,14 @@ public class LogAnalyzer {
     )).entrySet().stream().max(Map.Entry.comparingByValue()).map(Map.Entry::getKey);
   }
 
+  public Map<String, Long> repartitionActions() {
+
+    return logs.stream()
+            .collect(Collectors.groupingBy(
+                    LogEntry::getAction,
+                    Collectors.counting()
+            ));
+}
+
     
 }
