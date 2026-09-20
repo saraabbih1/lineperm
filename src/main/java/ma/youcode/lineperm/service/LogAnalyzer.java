@@ -1,6 +1,7 @@
 package ma.youcode.lineperm.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import ma.youcode.lineperm.model.LogEntry;
 
@@ -24,8 +25,12 @@ public class LogAnalyzer {
     }
     public long nombreAccesRefuses(){
         return logs.stream().filter(log->log.getStatus().equals("refused")).count();
-        
+
     }
+    public Map<String,Long> actionParUtilisateur(){
+        return logs.stream().collect(Collectors.groupingBy(LogEntry::getUser,Collectors.counting()));
+    }
+    
 
 
     
