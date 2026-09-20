@@ -2,6 +2,7 @@ package ma.youcode.lineperm.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import ma.youcode.lineperm.model.LogEntry;
 
@@ -30,8 +31,12 @@ public class LogAnalyzer {
     public Map<String,Long> actionParUtilisateur(){
         return logs.stream().collect(Collectors.groupingBy(LogEntry::getUser,Collectors.counting()));
     }
-    
 
+  public Optional<String> utilisateurPlusActif(){
+    return logs.stream().collect(Collectors.groupingBy(LogEntry::getUser,
+        Collectors.counting()
+    )).entrySet().stream().max(Map.Entry.comparingByValue()).map(Map.Entry::getKey);
+  }
 
     
 }

@@ -21,13 +21,15 @@ public class LogService {
 
             String[] parts = line.split(";");
 
-            if (parts.length == 4) {
+            if (parts.length == 6) {
 
                 LogEntry log = new LogEntry(
                         parts[0],
                         parts[1],
                         parts[2],
-                        parts[3]
+                        parts[3],
+                        parts[4],
+                        parts[5]
                 );
 
                 logs.add(log);
