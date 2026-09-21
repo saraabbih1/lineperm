@@ -28,6 +28,19 @@ public class LogAnalyzer {
         return logs.stream().filter(log->log.getStatus().equals("refused")).count();
 
     }
+    public List<Map.Entry<String, Long>> top3Fichiers() {
+    return logs.stream()
+            .filter(log -> log.getAction().equals("LECTURE"))
+            .collect(Collectors.groupingBy(
+                    LogEntry::getFichier,
+                    Collectors.counting()
+            ))
+            .entrySet()
+            .stream()
+            .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+            .limit(3)
+            .collect(Collectors.toList());
+} 
     public Map<String,Long> actionParUtilisateur(){
         return logs.stream().collect(Collectors.groupingBy(LogEntry::getUser,Collectors.counting()));
     }
