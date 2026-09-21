@@ -98,7 +98,10 @@ public class ConsoleApp {
         // System.out.println("create sarra " + result);
     }
     private void stats(){
-
+         String choix = "";
+      
+        
+  System.out.println("\n-----statistique-----");
  System.out.println("1. Nombre total d'actions");
     System.out.println("2. Nombre d'acces refuses");
     System.out.println("3. Utilisateurs distincts");
@@ -108,16 +111,20 @@ public class ConsoleApp {
     System.out.println("7. Utilisateur le plus actif");
     System.out.println("8. Repartition des actions par type");
     System.out.println("0. Retour");
+
+      while(!choix.equals("0")){
        
      System.out.println("choix: ");
-     String choix = scanner.nextLine();
+    choix = scanner.nextLine();
+     
+
      switch (choix){
 
         case "1":
             System.out.println( "Nombre total : " + logAnalyzer.nombreTotalLog());
             break;
         case "2":
-            System.out.println( "Accès refusés : " + logAnalyzer.nombreAccesRefuses());  
+            System.out.println( "Acces refuses : " + logAnalyzer.nombreAccesRefuses());  
               break;
         case "3":
             System.out.println( "les utilisateurs  : " + logAnalyzer.getUsers());  
@@ -133,7 +140,7 @@ public class ConsoleApp {
                 String user = scanner.nextLine();
 
                 System.out.println(
-                        "Accès refusés pour " + user + " : "
+                        "Accès refuses pour " + user + " : "
                         + logAnalyzer.accesRefusesUtilisateur(user)
                 );
                 break;
@@ -145,7 +152,7 @@ public class ConsoleApp {
                 );
                 break;
           case "8":
-                System.out.println("Répartition des actions :");
+                System.out.println("Repartition des actions :");
 
                 logAnalyzer.repartitionActions()
                         .forEach((action, nombre) ->
@@ -159,6 +166,7 @@ public class ConsoleApp {
         default:
             System.out.println("choix invalide");  
      }        
+     }
     }
     public void signup(){
         if(conectUser!=null){
