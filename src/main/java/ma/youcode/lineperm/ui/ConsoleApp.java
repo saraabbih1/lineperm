@@ -85,6 +85,7 @@ public class ConsoleApp {
                     break;
                  case "stats":
                   stats();
+                  break;
 
                 default:
                     System.out.println("Commande inconnue.");
@@ -97,12 +98,67 @@ public class ConsoleApp {
         // System.out.println("create sarra " + result);
     }
     private void stats(){
-        System.out.println("nombre total de logs est:" + logAnalyzer.nombreTotalLog());
 
-        System.out.println("utilisateur: ");
-        String user =scanner.nextLine();
+ System.out.println("1. Nombre total d'actions");
+    System.out.println("2. Nombre d'acces refuses");
+    System.out.println("3. Utilisateurs distincts");
+    System.out.println("4. Actions par utilisateur");
+    System.out.println("5. Top 3 des fichiers consultes");
+    System.out.println("6. Acces refuses d'un utilisateur");
+    System.out.println("7. Utilisateur le plus actif");
+    System.out.println("8. Repartition des actions par type");
+    System.out.println("0. Retour");
+       
+     System.out.println("choix: ");
+     String choix = scanner.nextLine();
+     switch (choix){
 
-        System.out.println("nombre de logs pour" + user + " : " + logAnalyzer.nombredeLogUser(user));
+        case "1":
+            System.out.println( "Nombre total : " + logAnalyzer.nombreTotalLog());
+            break;
+        case "2":
+            System.out.println( "Accès refusés : " + logAnalyzer.nombreAccesRefuses());  
+              break;
+        case "3":
+            System.out.println( "les utilisateurs  : " + logAnalyzer.getUsers());  
+              break;
+        case "4":
+            System.out.println(logAnalyzer.actionParUtilisateur());
+            break;
+        case "5":
+            System.out.println(logAnalyzer.top3Fichiers());
+            break;
+        case "6":
+      System.out.print("Nom de l'utilisateur : ");
+                String user = scanner.nextLine();
+
+                System.out.println(
+                        "Accès refusés pour " + user + " : "
+                        + logAnalyzer.accesRefusesUtilisateur(user)
+                );
+                break;
+        case "7":
+                System.out.println(
+                        "Utilisateur le plus actif : "
+                        + logAnalyzer.utilisateurPlusActif()
+                                .orElse("Aucun utilisateur")
+                );
+                break;
+          case "8":
+                System.out.println("Répartition des actions :");
+
+                logAnalyzer.repartitionActions()
+                        .forEach((action, nombre) ->
+                                System.out.println(
+                                        action + " : " + nombre
+                                )
+                        );
+                break;
+                case "0":
+            return;
+        default:
+            System.out.println("choix invalide");  
+     }        
     }
     public void signup(){
         if(conectUser!=null){
