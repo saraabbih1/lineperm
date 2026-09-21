@@ -41,6 +41,14 @@ public class LogAnalyzer {
             .limit(3)
             .collect(Collectors.toList());
 } 
+
+public long accesRefusesUtilisateur(String user) {
+    return logs.stream()
+            .filter(log -> log.getUser().equals(user))
+            .filter(log -> log.getStatus().equals("REFUSE"))
+            .count();
+}
+
     public Map<String,Long> actionParUtilisateur(){
         return logs.stream().collect(Collectors.groupingBy(LogEntry::getUser,Collectors.counting()));
     }
