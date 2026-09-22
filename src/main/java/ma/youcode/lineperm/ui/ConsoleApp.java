@@ -1,10 +1,14 @@
 package ma.youcode.lineperm.ui;
+import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 import ma.youcode.lineperm.model.FichierProtege;
+import ma.youcode.lineperm.model.LogEntry;
 import ma.youcode.lineperm.model.User;
 import ma.youcode.lineperm.service.FileService;
+import ma.youcode.lineperm.service.LogAnalyzer;
+import ma.youcode.lineperm.service.LogService;
 import ma.youcode.lineperm.service.UserService;
-
 
 public class ConsoleApp {
 
@@ -14,29 +18,43 @@ public class ConsoleApp {
     private final Scanner scanner;
     public boolean run=true ;
     public User conectUser;
+    private  final LogService logService;
+    private LogAnalyzer logAnalyzer;
 
     public ConsoleApp() {
-
-        userService = new UserService();
-         fileService = new FileService();
-        scanner = new Scanner(System.in);
-    }
+    userService = new UserService();
+    fileService = new FileService();
+    scanner = new Scanner(System.in);
+    logService = new LogService();
+}
 
     public void demarrer() {
              userService.charger();
              fileService.charger();
 
+             try {
+
+    List<LogEntry> logs = logService.charger();
+    logAnalyzer = new LogAnalyzer(logs);
+
+} catch (IOException e) {
+
+    System.out.println("Erreur lors du chargement des logs.");
+    return;
+}
+
 
         System.out.println("LinePermission");
 
         while(run) { 
+            afficherMenu();
 
             printPrompt();
             
          String comnd=scanner.nextLine().trim().toLowerCase();
    switch(comnd){
      case "singnup":
-        singnup();
+        signup();
         break;
         case "login":
             login();
@@ -50,6 +68,7 @@ public class ConsoleApp {
     case "exit":
         run=false;
         System.out.println("okeee by arras");
+        break;
     case "ls -l":
                     ls();
                     break;
@@ -71,6 +90,9 @@ public class ConsoleApp {
                 case "chmod":
                     chmod();
                     break;
+                 case "stats":
+                  stats();
+                  break;
 
                 default:
                     System.out.println("Commande inconnue.");
@@ -82,7 +104,78 @@ public class ConsoleApp {
 
         // System.out.println("create sarra " + result);
     }
-    public void singnup(){
+    private void stats(){
+         String choix = "";
+      
+        
+  System.out.println("\n-----statistique-----");
+ System.out.println("1. Nombre total d'actions");
+    System.out.println("2. Nombre d'acces refuses");
+    System.out.println("3. Utilisateurs distincts");
+    System.out.println("4. Actions par utilisateur");
+    System.out.println("5. Top 3 des fichiers consultes");
+    System.out.println("6. Acces refuses d'un utilisateur");
+    System.out.println("7. Utilisateur le plus actif");
+    System.out.println("8. Repartition des actions par type");
+    System.out.println("0. Retour");
+
+      while(!choix.equals("0")){
+       
+     System.out.println("choix: ");
+    choix = scanner.nextLine();
+     
+
+     switch (choix){
+
+        case "1":
+            System.out.println( "Nombre total : " + logAnalyzer.nombreTotalLog());
+            break;
+        case "2":
+            System.out.println( "Acces refuses : " + logAnalyzer.nombreAccesRefuses());  
+              break;
+        case "3":
+            System.out.println( "les utilisateurs  : " + logAnalyzer.getUsers());  
+              break;
+        case "4":
+            System.out.println(logAnalyzer.actionParUtilisateur());
+            break;
+        case "5":
+            System.out.println(logAnalyzer.top3Fichiers());
+            break;
+        case "6":
+      System.out.print("Nom de l'utilisateur : ");
+                String user = scanner.nextLine();
+
+                System.out.println(
+                        "Accès refuses pour " + user + " : "
+                        + logAnalyzer.accesRefusesUtilisateur(user)
+                );
+                break;
+        case "7":
+                System.out.println(
+                        "Utilisateur le plus actif : "
+                        + logAnalyzer.utilisateurPlusActif()
+                                .orElse("Aucun utilisateur")
+                );
+                break;
+          case "8":
+                System.out.println("Repartition des actions :");
+
+                logAnalyzer.repartitionActions()
+                        .forEach((action, nombre) ->
+                                System.out.println(
+                                        action + " : " + nombre
+                                )
+                        );
+                break;
+                case "0":
+            return;
+        default:
+            System.out.println("choix invalide");  
+     }        
+     }
+    }
+    public void signup(){
         if(conectUser!=null){
             System.out.println("deja il ya un utilisateur conecter ");
             return;
@@ -323,10 +416,11 @@ private void ls() {
 
         String droitCommande = scanner.nextLine().trim();
 
-        if (droitCommande.length() != 1 && droitCommande.length() !=2) {
-            System.out.println("Commande chmod invalide.");
-            return;
-        }
+        if (droitCommande.length() != 1
+        && droitCommande.length() != 2) {
+    System.out.println("Commande chmod invalide.");
+    return;
+}
 
         boolean ajouter;
 
@@ -369,6 +463,24 @@ private void ls() {
             System.out.println("Permission denied.");
         }
     }
+    
+private void afficherMenu() {
+
+    System.out.println("\n========== LinePermission ==========");
+    System.out.println("1. signup");
+    System.out.println("2. login");
+    System.out.println("3. logout");
+    System.out.println("4. ls -l");
+    System.out.println("5. touch");
+    System.out.println("6. cat");
+    System.out.println("7. nano");
+    System.out.println("8. chmod");
+    System.out.println("9. stats");
+    System.out.println("0. exit");
+    System.out.println("====================================");
+}
+
+
     
 }
 
