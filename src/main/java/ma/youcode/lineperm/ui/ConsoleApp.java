@@ -41,6 +41,7 @@ public class ConsoleApp {
         System.out.println("LinePermission");
 
         while(run) { 
+            afficherMenu();
 
             printPrompt();
             
@@ -452,6 +453,24 @@ private void ls() {
             System.out.println("Permission denied.");
         }
     }
+    
+private void afficherMenu() {
+
+    System.out.println("\n========== LinePermission ==========");
+    System.out.println("1. signup");
+    System.out.println("2. login");
+    System.out.println("3. logout");
+    System.out.println("4. ls -l");
+    System.out.println("5. touch");
+    System.out.println("6. cat");
+    System.out.println("7. nano");
+    System.out.println("8. chmod");
+    System.out.println("9. stats");
+    System.out.println("0. exit");
+    System.out.println("====================================");
+}
+
+
     
 }
 
