@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import ma.youcode.lineperm.model.LogEntry;
 
-public class LogService {
+public class LogService  {
 
     private final String filePath = "data/journal.txt";
 

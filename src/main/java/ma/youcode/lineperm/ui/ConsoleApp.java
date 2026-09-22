@@ -16,26 +16,32 @@ public class ConsoleApp {
     private final UserService userService;
     private final FileService fileService;
     private final Scanner scanner;
-    public boolean run ;
+    public boolean run=true ;
     public User conectUser;
     private  final LogService logService;
     private LogAnalyzer logAnalyzer;
 
     public ConsoleApp() {
+    userService = new UserService();
+    fileService = new FileService();
+    scanner = new Scanner(System.in);
+    logService = new LogService();
+}
 
-        userService = new UserService();
-         fileService = new FileService();
-        scanner = new Scanner(System.in);
-        logService=new LogService();
-    }
-
-    public void demarrer() throws IOException {
-        run=true;
+    public void demarrer() {
              userService.charger();
              fileService.charger();
 
-             List<LogEntry> logs = logService.charger();
-             logAnalyzer = new LogAnalyzer(logs);
+             try {
+
+    List<LogEntry> logs = logService.charger();
+    logAnalyzer = new LogAnalyzer(logs);
+
+} catch (IOException e) {
+
+    System.out.println("Erreur lors du chargement des logs.");
+    return;
+}
 
 
         System.out.println("LinePermission");
@@ -351,6 +357,10 @@ private void ls() {
             System.out.println("Fichier introuvable.");
             return;
         }
+
+
+
+        
         if (!fileService.peutEcrire(
                 conectUser.getLogin(),
                 nom)) {
