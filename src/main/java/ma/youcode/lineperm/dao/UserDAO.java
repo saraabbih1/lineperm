@@ -64,4 +64,32 @@ public void delete(int id) {
         e.printStackTrace();
     }
 }
+
+
+public User findByUsername (String username){
+    String sql = "SELECT * FROM users WHERE login = ?";
+
+
+try(PreparedStatement statement = connection.prepareStatement(sql)) {
+    statement.setString(1,username);
+    ResultSet result = statement.executeQuery();
+
+    if(result.next()){
+        int id = result.getInt("id");
+        String login = result.getString("login");
+        String password = result.getString("password");
+
+        return new User (id,login,password);
+    }
+
+    
+} catch (SQLException e) {
+    e.printStackTrace();
+    
+}
+return null;
+
+
+
+}
 }

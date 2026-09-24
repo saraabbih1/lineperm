@@ -55,7 +55,7 @@ public void charger(){
                     otherDelete = otherPermissions.charAt(2) == 'd';
 
         }
-        FichierProtege fichier = new FichierProtege(nom, proprietaire,ownerRead,
+        FichierProtege fichier = new FichierProtege(id,nom, proprietaire,ownerRead,
                         ownerWrite,
                         ownerDelete,
                         otherRead,

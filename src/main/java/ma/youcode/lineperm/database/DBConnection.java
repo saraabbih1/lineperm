@@ -17,9 +17,9 @@ public class DBConnection {
         if (connection == null) {
             try {
                 connection = DriverManager.getConnection("jdbc:sqlite:data/audit.db");
-                System.out.println("Connexion à SQLite réussie !");
+                System.out.println("Connexion a SQLite reussie !");
             } catch (SQLException e) {
-                System.out.println("Erreur de connexion à la base de données.");
+                System.out.println("Erreur de connexion a la base de donnees.");
                 e.printStackTrace();
             }
         }

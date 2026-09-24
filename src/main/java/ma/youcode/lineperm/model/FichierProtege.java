@@ -1,6 +1,7 @@
 package ma.youcode.lineperm.model;
 
 public class FichierProtege {
+    private int id;
     private String nom;
     private String proprietaire;
 
@@ -13,9 +14,11 @@ public class FichierProtege {
     private boolean otherDelete;
 
 
-    public FichierProtege(String nom,String proprietaire,boolean ownerRead,boolean ownerWrite,boolean  ownerDelete
+    public FichierProtege(int id,String nom,String proprietaire,boolean ownerRead,boolean ownerWrite,boolean  ownerDelete
                           ,boolean otherRead,boolean otherWrite,boolean otherDelete ){
+                            this.id=id;
                             this.nom=nom;
+
                             this.proprietaire=proprietaire;
                             this.ownerRead=ownerRead;
                             this.ownerWrite=ownerWrite;
@@ -28,7 +31,7 @@ public class FichierProtege {
                           }
 
     public FichierProtege(String nom,String proprietaire){
-        this(nom,proprietaire,
+        this(0,nom,proprietaire,
             true,
             true,
             true,
@@ -36,6 +39,10 @@ public class FichierProtege {
             false,
             false);
     } 
+
+    public int getId(){
+        return id;
+    }
    public String getNom() {
     return nom;
 }
