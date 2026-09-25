@@ -38,6 +38,29 @@ import ma.youcode.lineperm.model.User;
 
 
 
+    public User findUser(String login){
+        if(login==null){
+            return null;
+        }
+        return userDAO.findByUsername(login.trim());
+    }
+
+     public User authentification(String login,String password){
+        if(login==null || password == null){
+            return null;
+        }
+        login=login.trim();
+        User user = userDAO.findByUsername(login);
+        if(user==null){
+            return null;
+        }
+
+        boolean passwordCorrect = BCrypt.checkpw(password,user.getPasswordHash());
+        if(!passwordCorrect){
+            return null;
+        }
+        return user;
+     }
 
 
  }
