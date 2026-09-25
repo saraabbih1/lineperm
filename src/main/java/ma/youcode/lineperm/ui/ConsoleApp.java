@@ -38,10 +38,11 @@ public class ConsoleApp {
     logAnalyzer = new LogAnalyzer(logs);
 
 } catch (IOException e) {
-
     System.out.println("Erreur lors du chargement des logs.");
+    e.printStackTrace();
     return;
 }
+
 
 
         System.out.println("LinePermission");
@@ -316,91 +317,170 @@ private void ls() {
 
      private void cat() {
 
-        if (conectUser == null) {
-            System.out.println("Permission denied.");
-            return;
-        }
-
-        System.out.print("Nom du fichier : ");
-        String nom = scanner.nextLine();
-
-        if (!fileService.existe(nom)) {
-            System.out.println("Fichier introuvable.");
-            return;
-        }
-
-        String contenu =
-                fileService.lire(
-                        conectUser.getLogin(),
-                        nom
-                );
-
-        if (contenu == null) {
-            System.out.println("Permission denied.");
-            return;
-        }
-
-        System.out.println(contenu);
+    if (conectUser == null) {
+        System.out.println("Permission denied.");
+        return;
     }
+
+    System.out.print("Nom du fichier : ");
+    String nom = scanner.nextLine();
+
+    if (!fileService.existe(nom)) {
+        System.out.println("Fichier introuvable.");
+
+        try {
+            logService.enregistrerAction(
+                    conectUser.getLogin(),
+                    "LECTURE",
+                    nom,
+                    "REFUSE"
+            );
+        } catch (IOException e) {
+            System.out.println("Erreur lors de l'enregistrement du log.");
+        }
+
+        return;
+    }
+
+    String contenu = fileService.lire(
+            conectUser.getLogin(),
+            nom
+    );
+
+    if (contenu == null) {
+
+        System.out.println("Permission denied.");
+
+        try {
+            logService.enregistrerAction(
+                    conectUser.getLogin(),
+                    "LECTURE",
+                    nom,
+                    "REFUSE"
+            );
+        } catch (IOException e) {
+            System.out.println("Erreur lors de l'enregistrement du log.");
+        }
+
+        return;
+    }
+
+    System.out.println(contenu);
+
+    try {
+        logService.enregistrerAction(
+                conectUser.getLogin(),
+                "LECTURE",
+                nom,
+                "OK"
+        );
+    } catch (IOException e) {
+        System.out.println("Erreur lors de l'enregistrement du log.");
+    }
+}
 
  private void nano() {
 
-        if (conectUser == null) {
-            System.out.println("Permission denied.");
-            return;
-        }
-
-        System.out.print("Nom du fichier : ");
-        String nom = scanner.nextLine();
-
-        if (!fileService.existe(nom)) {
-            System.out.println("Fichier introuvable.");
-            return;
-        }
-
-
-
-        
-        if (!fileService.peutEcrire(
-                conectUser.getLogin(),
-                nom)) {
-
-            System.out.println("Permission denied.");
-            return;
-        }
-
-        System.out.println(
-                "Ecrivez le contenu. Tapez EOF pour terminer."
-        );
-
-        StringBuilder contenu = new StringBuilder();
-
-        while (true) {
-
-            String ligne = scanner.nextLine();
-
-            if (ligne.equals("EOF")) {
-                break;
-            }
-
-            contenu.append(ligne);
-            contenu.append("\n");
-        }
-
-        boolean resultat =
-                fileService.ecrire(
-                        conectUser.getLogin(),
-                        nom,
-                        contenu.toString()
-                );
-
-        if (resultat) {
-            System.out.println("Fichier modifie.");
-        } else {
-            System.out.println("Permission denied.");
-        }
+    if (conectUser == null) {
+        System.out.println("Permission denied.");
+        return;
     }
 
+    System.out.print("Nom du fichier : ");
+    String nom = scanner.nextLine();
+
+    if (!fileService.existe(nom)) {
+        System.out.println("Fichier introuvable.");
+
+        try {
+            logService.enregistrerAction(
+                    conectUser.getLogin(),
+                    "ECRITURE",
+                    nom,
+                    "REFUSE"
+            );
+        } catch (IOException e) {
+            System.out.println("Erreur lors de l'enregistrement du log.");
+        }
+
+        return;
+    }
+
+    if (!fileService.peutEcrire(
+            conectUser.getLogin(),
+            nom)) {
+
+        System.out.println("Permission denied.");
+
+        try {
+            logService.enregistrerAction(
+                    conectUser.getLogin(),
+                    "ECRITURE",
+                    nom,
+                    "REFUSE"
+            );
+        } catch (IOException e) {
+            System.out.println("Erreur lors de l'enregistrement du log.");
+        }
+
+        return;
+    }
+
+    System.out.println(
+            "Ecrivez le contenu. Tapez EOF pour terminer."
+    );
+
+    StringBuilder contenu = new StringBuilder();
+
+    while (true) {
+
+        String ligne = scanner.nextLine();
+
+        if (ligne.equals("EOF")) {
+            break;
+        }
+
+        contenu.append(ligne);
+        contenu.append("\n");
+    }
+
+    boolean resultat = fileService.ecrire(
+            conectUser.getLogin(),
+            nom,
+            contenu.toString()
+    );
+
+    if (resultat) {
+
+        System.out.println("Fichier modifie.");
+
+        try {
+            logService.enregistrerAction(
+                    conectUser.getLogin(),
+                    "ECRITURE",
+                    nom,
+                    "OK"
+            );
+        } catch (IOException e) {
+            System.out.println("Erreur lors de l'enregistrement du log.");
+        }
+
+    } else {
+
+        System.out.println("Permission denied.");
+
+        try {
+            logService.enregistrerAction(
+                    conectUser.getLogin(),
+                    "ECRITURE",
+                    nom,
+                    "REFUSE"
+            );
+        } catch (IOException e) {
+            System.out.println("Erreur lors de l'enregistrement du log.");
+        }
+    }
+}
 
   
     private void chmod() {
