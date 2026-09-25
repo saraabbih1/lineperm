@@ -29,7 +29,7 @@ public class ConsoleApp {
 }
 
     public void demarrer() {
-             userService.charger();
+            //  userService.charger();
              fileService.charger();
 
              try {

@@ -12,7 +12,7 @@ import ma.youcode.lineperm.model.User;
         userDAO = new UserDAO();
 
     }
-    public boolean creatUser(String login,String password){
+    public boolean createUser(String login,String password){
         if(login == null || password==null){
             return false;
         }
