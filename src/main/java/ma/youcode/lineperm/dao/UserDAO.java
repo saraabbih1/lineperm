@@ -14,8 +14,6 @@ public class UserDAO extends AbstractDao<User>{
 
             statement.executeUpdate();
 
-
-
         }
         catch(SQLException e){
             e.printStackTrace();
