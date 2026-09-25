@@ -45,9 +45,9 @@ public class ConsoleApp {
 
 
         System.out.println("LinePermission");
-
+afficherMenu();
         while(run) { 
-            afficherMenu();
+            
 
             printPrompt();
             
