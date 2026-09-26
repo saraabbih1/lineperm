@@ -2,6 +2,8 @@ package ma.youcode.lineperm.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import ma.youcode.lineperm.model.FichierProtege;
 import ma.youcode.lineperm.model.User;
 
@@ -77,17 +79,7 @@ if (user == null) {
     return null;
 }
 
-return new FichierProtege(
-    fichierId,
-    nom,
-    user.getLogin(),
-    true,
-    true,
-    true,
-    false,
-    false,
-    false
-);
+return new FichierProtege(fichierId,nom,user.getLogin(),true,true, true, false, false, false);
         }
 
     } catch (SQLException e) {
@@ -116,4 +108,51 @@ return new FichierProtege(
 e.printStackTrace();
         }
     }
+    public  List<FichierProtege> findByProprietaire(int userId) {
+
+    List<FichierProtege> fichiers = new ArrayList<>();
+
+    String sql = """
+        SELECT f.id, f.nom, f.droits, u.login
+        FROM fichiers f
+        JOIN users u ON f.proprietaire_id = u.id
+        WHERE f.proprietaire_id = ?
+        """;
+
+    try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+        statement.setInt(1, userId);
+
+        ResultSet result = statement.executeQuery();
+
+        while (result.next()) {
+
+            int id = result.getInt("id");
+            String nom = result.getString("nom");
+            String droits = result.getString("droits");
+            String proprietaire = result.getString("login");
+
+            String[] parties = droits.split("\\|");
+
+            String owner = parties[0];
+            String other = parties[1];
+
+            boolean ownerRead = owner.charAt(0) != '-';
+            boolean ownerWrite = owner.charAt(1) != '-';
+            boolean ownerDelete = owner.charAt(2) != '-';
+
+            boolean otherRead = other.charAt(0) != '-';
+            boolean otherWrite = other.charAt(1) != '-';
+            boolean otherDelete = other.charAt(2) != '-';
+
+            FichierProtege fichier = new FichierProtege( id,nom,proprietaire,ownerRead,ownerWrite, ownerDelete,otherRead,otherWrite,otherDelete );
+            fichiers.add(fichier);
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return fichiers;
+}
 }
