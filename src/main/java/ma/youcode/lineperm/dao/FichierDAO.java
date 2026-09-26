@@ -2,7 +2,6 @@ package ma.youcode.lineperm.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import ma.youcode.lineperm.model.FichierProtege;
 import ma.youcode.lineperm.model.User;
 
@@ -101,5 +100,20 @@ return new FichierProtege(
 
     @Override
     public void delete(int id) {
+        String sql = "DELETE FROM fichiers WHERE id = ?";
+
+        try(PreparedStatement statement = connection.prepareStatement(sql)){
+            statement.setInt(1,id);
+            int lignesSupprimes = statement.executeUpdate();
+            if(lignesSupprimes >0){
+                System.out.println("Fichier supprime avec succes");
+                        }
+                        else{
+                            System.out.println("Fichier introuvable");
+                        }
+        }
+        catch(SQLException e){
+e.printStackTrace();
+        }
     }
 }
