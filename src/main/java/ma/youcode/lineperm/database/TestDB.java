@@ -11,9 +11,18 @@ public class TestDB {
 
       FichierDAO fichierDAO = new FichierDAO();
 
-FichierProtege fichier =
-        new FichierProtege("test.txt", "sarratest");
+FichierProtege fichier = fichierDAO.findById(1);
 
-fichierDAO.save(fichier);
+System.out.println("Fichier trouvé !");
+System.out.println("ID : " + fichier.getId());
+System.out.println("Nom : " + fichier.getNom());
+
+System.out.println("Owner Read : " + fichier.isOwnerRead());
+System.out.println("Owner Write : " + fichier.isOwnerWrite());
+System.out.println("Owner Delete : " + fichier.isOwnerDelete());
+
+System.out.println("Other Read : " + fichier.isOtherRead());
+System.out.println("Other Write : " + fichier.isOtherWrite());
+System.out.println("Other Delete : " + fichier.isOtherDelete());
     }
 }

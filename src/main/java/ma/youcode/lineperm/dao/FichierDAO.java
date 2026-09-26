@@ -1,5 +1,6 @@
 package ma.youcode.lineperm.dao;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import ma.youcode.lineperm.model.FichierProtege;
@@ -51,9 +52,52 @@ public void save(FichierProtege fichier) {
     }
 }
    @Override
-    public FichierProtege findById(int id) {
-        return null;
+public FichierProtege findById(int id) {
+
+    String sql = "SELECT * FROM fichiers WHERE id = ?";
+
+    try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+        statement.setInt(1, id);
+
+        ResultSet result = statement.executeQuery();
+
+        if (result.next()) {
+
+            int fichierId = result.getInt("id");
+            String nom = result.getString("nom");
+            String droits = result.getString("droits");
+            int proprietaireId = result.getInt("proprietaire_id");
+
+             System.out.println("ID DB : " + fichierId);
+            System.out.println("Nom DB : " + nom);
+            System.out.println("Droits DB : " + droits);
+          User user = userDAO.findById(proprietaireId);
+
+if (user == null) {
+    return null;
+}
+
+return new FichierProtege(
+    fichierId,
+    nom,
+    user.getLogin(),
+    true,
+    true,
+    true,
+    false,
+    false,
+    false
+);
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+
+    return null;
+}
+    
 
     @Override
     public void delete(int id) {
