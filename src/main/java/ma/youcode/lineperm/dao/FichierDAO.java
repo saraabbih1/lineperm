@@ -50,4 +50,12 @@ public void save(FichierProtege fichier) {
         e.printStackTrace();
     }
 }
+   @Override
+    public FichierProtege findById(int id) {
+        return null;
+    }
+
+    @Override
+    public void delete(int id) {
+    }
 }
