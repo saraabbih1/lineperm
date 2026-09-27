@@ -165,4 +165,25 @@ public Map<String, Integer> topFichiers(int limite) {
 
     return resultats;
 }
+
+public int refusesByUser(String username) {
+
+    String sql = "SELECT COUNT(*) FROM logs l JOIN users u ON l.user_id = u.id WHERE u.login = ? AND l.status = 'REFUSED'";
+
+    try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+        statement.setString(1, username);
+
+        ResultSet result = statement.executeQuery();
+
+        if (result.next()) {
+            return result.getInt(1);
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return 0;
+}
 }
