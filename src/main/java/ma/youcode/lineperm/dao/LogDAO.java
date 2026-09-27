@@ -139,4 +139,30 @@ public Map<Integer, Integer> actionsByUser() {
 
     return resultats;
 }
+
+public Map<String, Integer> topFichiers(int limite) {
+
+    Map<String, Integer> resultats = new HashMap<>();
+
+    String sql = " SELECT f.nom, COUNT(*) AS total FROM logs l JOIN fichiers f ON l.fichier_id = f.id GROUP BY f.id, f.nom ORDER BY total DESC LIMIT ?";
+
+    try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+        statement.setInt(1, limite);
+
+        ResultSet result = statement.executeQuery();
+
+        while (result.next()) {
+            String nom = result.getString("nom");
+            int total = result.getInt("total");
+
+            resultats.put(nom, total);
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return resultats;
+}
 }
