@@ -13,10 +13,7 @@ public class LogDAO extends AbstractDao<LogEntry> {
     @Override
     public void save(LogEntry log) {
 
-        String sql = """
-                INSERT INTO logs (user_id, fichier_id, action, status, date)
-                VALUES (?, ?, ?, ?, ?)
-                """;
+        String sql = "INSERT INTO logs (user_id, fichier_id, action, status, date) VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
@@ -189,7 +186,7 @@ public int refusesByUser(String username) {
 
 public String userPlusActif() {
 
-    String sql = " SELECT u.login, COUNT(*) AS total FROM logs JOIN users u ON l.user_id = u.id GROUP BY u.id, u.login ORDER BY total DESC LIMIT 1";
+    String sql = " SELECT u.login, COUNT(*) AS total FROM logs l JOIN users u ON l.user_id = u.id GROUP BY u.id, u.login ORDER BY total DESC LIMIT 1";
 
     try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
