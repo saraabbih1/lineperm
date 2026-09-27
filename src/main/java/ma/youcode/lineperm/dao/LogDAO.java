@@ -1,0 +1,81 @@
+package ma.youcode.lineperm.dao;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import ma.youcode.lineperm.model.LogEntry;
+
+public class LogDAO extends AbstractDao<LogEntry> {
+
+    @Override
+    public void save(LogEntry log) {
+
+        String sql = """
+                INSERT INTO logs (user_id, fichier_id, action, status, date)
+                VALUES (?, ?, ?, ?, ?)
+                """;
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, log.getUserId());
+            statement.setInt(2, log.getFichierId());
+            statement.setString(3, log.getAction());
+            statement.setString(4, log.getStatus());
+            statement.setString(5, log.getDate());
+
+            statement.executeUpdate();
+
+            System.out.println("Log ajoute avec succs.");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override 
+    public LogEntry findById(int id){
+        String sql = "SELECT * FROM logs WHERE id = ?";
+        try(PreparedStatement statement = connection.prepareStatement(sql)){
+
+            statement.setInt(1, id);
+            ResultSet result = statement.executeQuery();
+
+            if(result.next()){
+                int logId=result.getInt("id");
+                 int userId = result.getInt("user_id");
+                int fichierId = result.getInt("fichier_id");
+                String action = result.getString("action");
+                String status = result.getString("status");
+                String date = result.getString("date");
+
+                return new LogEntry(logId, userId, fichierId, action, status, date);
+            }
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public void delete(int id){
+        System.out.println("les logs ne peuvent pas etre supprime");
+    }
+
+    public int compterTotal(){
+
+        String sql = "SELECT COUNT(*) FROM logs";
+
+        try(PreparedStatement statement = connection.prepareStatement(sql)){
+            ResultSet result = statement.executeQuery();
+            if(result.next()){
+                return result.getInt(1);
+            }
+        }
+            catch(SQLException e){
+                e.printStackTrace();
+            }
+        return 0;
+    }
+}
