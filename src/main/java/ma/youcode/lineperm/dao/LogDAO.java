@@ -78,4 +78,20 @@ public class LogDAO extends AbstractDao<LogEntry> {
             }
         return 0;
     }
+
+    public int compterRefuses(){
+        String sql = "SELECT COUNT(*) FROM logs WHERE status =?";
+        try(PreparedStatement statement = connection.prepareStatement(sql)){
+            statement.setString(1,"REFUSED");
+           ResultSet result = statement.executeQuery();
+            if(result.next()){
+                return result.getInt(1);
+            }
+
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+    
+    return 0;}
 }
