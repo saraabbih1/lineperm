@@ -186,4 +186,48 @@ public int refusesByUser(String username) {
 
     return 0;
 }
+
+public String userPlusActif() {
+
+    String sql = " SELECT u.login, COUNT(*) AS total FROM logs JOIN users u ON l.user_id = u.id GROUP BY u.id, u.login ORDER BY total DESC LIMIT 1";
+
+    try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+        ResultSet result = statement.executeQuery();
+
+        if (result.next()) {
+            return result.getString("login");
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return null;
+}
+
+
+public Map<String, Integer> repartitionByAction() {
+
+    Map<String, Integer> resultats = new HashMap<>();
+
+    String sql = " SELECT action, COUNT(*) AS total FROM logs GROUP BY action";
+
+    try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+        ResultSet result = statement.executeQuery();
+
+        while (result.next()) {
+            String action = result.getString("action");
+            int total = result.getInt("total");
+
+            resultats.put(action, total);
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return resultats;
+}
 }
