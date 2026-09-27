@@ -1,29 +1,33 @@
 package ma.youcode.lineperm.model;
 
 public class LogEntry {
-
-    private final String date;
-    private final String heure ;
-    private final String user;
+    private final int id;
+    private final int userId;
+    private final int fichierId;
     private final String action;
-    private final String fichier;
     private final String status;
-
-    public LogEntry(String date, String heure, String user, String action,String fichier, String status) {
-        this.date = date;
-           this.heure = heure;
-        this.user = user;
+ private final String date;
+    public LogEntry( int id,int userId,int fichierId , String action, String status, String date) {
+        
+       
+    this.id= id;
+    this.userId=userId;
+    this.fichierId=fichierId;
         this.action = action;
-          this.fichier = fichier;
         this.status = status;
+        this.date = date;
     }
 
-    public String getDate() {
-        return date;
+    public int getId() {
+        return this.id;
     }
 
-    public String getUser() {
-        return user;
+    public int getUserId() {
+        return this.userId;
+    }
+
+    public int getFichierId() {
+        return this.fichierId;
     }
 
     public String getAction() {
@@ -33,11 +37,9 @@ public class LogEntry {
     public String getStatus() {
         return status;
     }
-    public String getHeure() {
-    return heure;
-}
+ public String getDate() {
+        return date;
+    }
 
-public String getFichier() {
-    return fichier;
-}
+
 }
