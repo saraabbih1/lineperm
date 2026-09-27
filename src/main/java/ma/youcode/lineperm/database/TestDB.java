@@ -10,20 +10,13 @@ public class TestDB {
 
 FichierDAO fichierDAO = new FichierDAO();
 
-FichierProtege fichier =
-        new FichierProtege("file1.txt", "sarratest");
+fichierDAO.updateDroits(2, "r--");
 
-fichierDAO.save(fichier);
+FichierProtege fichier = fichierDAO.findById(2);
 
-List<FichierProtege> fichiers =
-        fichierDAO.findByProprietaire(4);
-
-System.out.println("Nombre de fichiers : " + fichiers.size());
-
-for (FichierProtege f : fichiers) {
-    System.out.println("ID : " + f.getId());
-    System.out.println("Nom : " + f.getNom());
-    System.out.println("Proprietaire : " + f.getProprietaire());
-}
+System.out.println("Nom : " + fichier.getNom());
+System.out.println("Owner Read : " + fichier.isOwnerRead());
+System.out.println("Owner Write : " + fichier.isOwnerWrite());
+System.out.println("Other Read : " + fichier.isOtherRead());
         
 }}

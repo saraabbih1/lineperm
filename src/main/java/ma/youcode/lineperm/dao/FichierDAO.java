@@ -155,4 +155,29 @@ e.printStackTrace();
 
     return fichiers;
 }
+
+  public void updateDroits(int id, String otherDroits) {
+
+    String droits = "rwd|" + otherDroits;
+
+    String sql = "UPDATE fichiers SET droits = ? WHERE id = ?";
+
+    try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+        statement.setString(1, droits);
+        statement.setInt(2, id);
+
+        int lignesModifiees = statement.executeUpdate();
+
+        if (lignesModifiees > 0) {
+            System.out.println("Droits modifies avec succes.");
+        } else {
+            System.out.println("Fichier introuvable.");
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
 }
+}
+  
