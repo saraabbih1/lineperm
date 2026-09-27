@@ -3,6 +3,8 @@ package ma.youcode.lineperm.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import ma.youcode.lineperm.model.LogEntry;
 
@@ -112,5 +114,29 @@ public class LogDAO extends AbstractDao<LogEntry> {
     }
 
     return 0;
+}
+
+public Map<Integer, Integer> actionsByUser() {
+
+    Map<Integer, Integer> resultats = new HashMap<>();
+
+    String sql = "SELECT user_id, COUNT(*) AS total FROM logs GROUP BY user_id ";
+
+    try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+        ResultSet result = statement.executeQuery();
+
+        while (result.next()) {
+            int userId = result.getInt("user_id");
+            int total = result.getInt("total");
+
+            resultats.put(userId, total);
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return resultats;
 }
 }
