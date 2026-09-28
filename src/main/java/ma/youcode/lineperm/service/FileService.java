@@ -3,171 +3,185 @@ package ma.youcode.lineperm.service;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
+
 import ma.youcode.lineperm.access.ControleAcces;
+import ma.youcode.lineperm.dao.FichierDAO;
+import ma.youcode.lineperm.dao.LogDAO;
+import ma.youcode.lineperm.dao.UserDAO;
 import ma.youcode.lineperm.model.FichierProtege;
-
-
-
+import ma.youcode.lineperm.model.LogEntry;
+import ma.youcode.lineperm.model.User;
 
 public class FileService {
-    
 
-private Map<String, FichierProtege> fichiers = new HashMap<>();
-private final Path fichiersPath = Path.of("src/main/resources/files.txt");
-private final Path dataPath = Path.of("data");
+    private final FichierDAO fichierDAO;
+    private final LogDAO logDAO;
+    private final UserDAO userDAO;
 
-public void charger(){
-    fichiers.clear();
+    private final Path dataPath = Path.of("data");
 
-
-   if(!Files.exists(fichiersPath)){
-    return;
-   }
-   try {
-        List<String> lines = Files.readAllLines(fichiersPath);
-        for(String Line : lines){
-            String parts[] = Line.split(";" );
-           String nom= parts[0];
-           String proprietaire=parts[1];
-
-            boolean ownerRead = true;
-                boolean ownerWrite = true;
-                boolean ownerDelete = true;
-
-                boolean otherRead = false;
-                boolean otherWrite = false;
-                boolean otherDelete = false;
-
-        if(parts.length >= 4){
-            String ownerPermissions = parts[2];
-            String otherPermissions = parts[3];
-
-            ownerRead = ownerPermissions.charAt(0) == 'r';
-            ownerWrite = ownerPermissions.charAt(1) == 'w';
-             ownerDelete = ownerPermissions.charAt(2) == 'd';
-
-                    otherRead = otherPermissions.charAt(0) == 'r';
-                    otherWrite = otherPermissions.charAt(1) == 'w';
-                    otherDelete = otherPermissions.charAt(2) == 'd';
-
-        }
-        FichierProtege fichier = new FichierProtege(0,nom, proprietaire,ownerRead,
-                        ownerWrite,
-                        ownerDelete,
-                        otherRead,
-                        otherWrite,
-                        otherDelete);
-                        fichiers.put(nom,fichier);
-        
-        }
-   } catch (Exception e) {
-    System.out.println("kyn ghalat ");
-   }
-}
-    public List<FichierProtege> lister(){
-        return new ArrayList<>(fichiers.values());
+    public FileService() {
+        fichierDAO = new FichierDAO();
+        logDAO = new LogDAO();
+        userDAO = new UserDAO();
     }
-    private boolean  nomValide(String nom){
-        if (nom == null || nom.isBlank()){
+
+    public void charger() {
+    }
+
+    public List<FichierProtege> lister() {
+        return fichierDAO.findAll();
+    }
+
+    private boolean nomValide(String nom) {
+
+        if (nom == null || nom.isBlank()) {
             return false;
         }
-        return !nom.contains("/")&&!nom.contains("\\")&&!nom.contains(";");
+
+        return !nom.contains("/")
+                && !nom.contains("\\")
+                && !nom.contains(";");
     }
 
-
-
-
-    // creation de fichier 
-
-     public boolean creer(String nom, String proprietaire) {
+    public boolean creer(
+            String nom,
+            String proprietaire) {
 
         if (!nomValide(nom)) {
             return false;
         }
 
-        if (fichiers.containsKey(nom)) {
+        if (fichierDAO.findByNom(nom) != null) {
             return false;
         }
-
-        FichierProtege fichier =
-                new FichierProtege(nom, proprietaire);
 
         try {
 
             Files.createDirectories(dataPath);
 
-            Path contenuPath = dataPath.resolve(nom);
+            Path contenuPath =
+                    dataPath.resolve(nom);
 
-            Files.writeString(contenuPath, "");
+            Files.writeString(
+                    contenuPath,
+                    ""
+            );
 
-            fichiers.put(nom, fichier);
+            FichierProtege fichier =
+                    new FichierProtege(
+                            nom,
+                            proprietaire
+                    );
 
-            sauvegarder();
+            fichierDAO.save(fichier);
+
+            FichierProtege fichierCree =
+                    fichierDAO.findByNom(nom);
+
+            if (fichierCree == null) {
+                return false;
+            }
+
+            enregistrerLog(
+                    proprietaire,
+                    fichierCree.getId(),
+                    "CREATE",
+                    "SUCCESS"
+            );
 
             return true;
 
         } catch (IOException e) {
 
+            e.printStackTrace();
             return false;
         }
     }
 
-
-    //existe 
-
-     public boolean existe(String nom) {
-
-        return fichiers.containsKey(nom);
+    public boolean existe(String nom) {
+        return fichierDAO.findByNom(nom) != null;
     }
 
+    public String lire(
+            String login,
+            String nom) {
 
-    //cat
-      public String lire(String login, String nom) {
-
-        FichierProtege fichier = fichiers.get(nom);
+        FichierProtege fichier =
+                fichierDAO.findByNom(nom);
 
         if (fichier == null) {
             return null;
         }
 
-        if (!ControleAcces.estAutorise(login, fichier, 'r')) {
+        if (!ControleAcces.estAutorise(
+                login,
+                fichier,
+                'r')) {
+
+            enregistrerLog(
+                    login,
+                    fichier.getId(),
+                    "READ",
+                    "REFUSED"
+            );
+
             return null;
         }
 
         try {
 
-            Path contenuPath = dataPath.resolve(nom);
+            Path contenuPath =
+                    dataPath.resolve(nom);
 
             if (!Files.exists(contenuPath)) {
                 return "";
             }
 
-            return Files.readString(contenuPath);
+            String contenu =
+                    Files.readString(contenuPath);
+
+            enregistrerLog(
+                    login,
+                    fichier.getId(),
+                    "READ",
+                    "SUCCESS"
+            );
+
+            return contenu;
 
         } catch (IOException e) {
 
             return null;
         }
     }
-
-    // nano 
 
     public boolean ecrire(
             String login,
             String nom,
             String contenu) {
 
-        FichierProtege fichier = fichiers.get(nom);
+        FichierProtege fichier =
+                fichierDAO.findByNom(nom);
 
         if (fichier == null) {
             return false;
         }
 
-        if (!ControleAcces.estAutorise(login, fichier, 'w')) {
+        if (!ControleAcces.estAutorise(
+                login,
+                fichier,
+                'w')) {
+
+            enregistrerLog(
+                    login,
+                    fichier.getId(),
+                    "WRITE",
+                    "REFUSED"
+            );
+
             return false;
         }
 
@@ -175,11 +189,20 @@ public void charger(){
 
             Files.createDirectories(dataPath);
 
-            Path contenuPath = dataPath.resolve(nom);
+            Path contenuPath =
+                    dataPath.resolve(nom);
 
-            Files.writeString(contenuPath, contenu);
+            Files.writeString(
+                    contenuPath,
+                    contenu
+            );
 
-            sauvegarder();
+            enregistrerLog(
+                    login,
+                    fichier.getId(),
+                    "WRITE",
+                    "SUCCESS"
+            );
 
             return true;
 
@@ -189,107 +212,145 @@ public void charger(){
         }
     }
 
-    // chmod
-      public boolean chmod(
+    public boolean peutEcrire(
             String login,
-            char droit,
-            boolean ajouter,
             String nom) {
 
-        FichierProtege fichier = fichiers.get(nom);
+        FichierProtege fichier =
+                fichierDAO.findByNom(nom);
 
         if (fichier == null) {
             return false;
         }
 
-   
-        if (!login.equals(fichier.getProprietaire())) {
+        boolean autorise =
+                ControleAcces.estAutorise(
+                        login,
+                        fichier,
+                        'w'
+                );
+
+        if (!autorise) {
+
+            enregistrerLog(
+                    login,
+                    fichier.getId(),
+                    "WRITE",
+                    "REFUSED"
+            );
+        }
+
+        return autorise;
+    }
+
+    public boolean chmod(
+            String login,
+            char droit,
+            boolean ajouter,
+            String nom) {
+
+        FichierProtege fichier =
+                fichierDAO.findByNom(nom);
+
+        if (fichier == null) {
+            return false;
+        }
+
+        if (!login.equals(
+                fichier.getProprietaire())) {
+
+            enregistrerLog(
+                    login,
+                    fichier.getId(),
+                    "CHMOD",
+                    "REFUSED"
+            );
+
             return false;
         }
 
         if (droit == 'r') {
+
             fichier.setOtherRead(ajouter);
-        }
 
-        else if (droit == 'w') {
+        } else if (droit == 'w') {
+
             fichier.setOtherWrite(ajouter);
-        }
 
-        else if (droit == 'd') {
+        } else if (droit == 'd') {
+
             fichier.setOtherDelete(ajouter);
-        }
 
-        else {
+        } else {
+
             return false;
         }
 
-        sauvegarder();
+        String droits =
+                construireDroits(fichier);
+
+        fichierDAO.updateDroits(
+                fichier.getId(),
+                droits
+        );
+
+        enregistrerLog(
+                login,
+                fichier.getId(),
+                "CHMOD",
+                "SUCCESS"
+        );
 
         return true;
     }
 
+    private String construireDroits(
+            FichierProtege fichier) {
 
-    private String permissionsOwner(FichierProtege fichier) {
+        String owner =
+                ""
+                + (fichier.isOwnerRead()
+                    ? "r" : "-")
+                + (fichier.isOwnerWrite()
+                    ? "w" : "-")
+                + (fichier.isOwnerDelete()
+                    ? "d" : "-");
 
-        return ""
-                + (fichier.isOwnerRead() ? "r" : "-")
-                + (fichier.isOwnerWrite() ? "w" : "-")
-                + (fichier.isOwnerDelete() ? "d" : "-");
+        String other =
+                ""
+                + (fichier.isOtherRead()
+                    ? "r" : "-")
+                + (fichier.isOtherWrite()
+                    ? "w" : "-")
+                + (fichier.isOtherDelete()
+                    ? "d" : "-");
+
+        return owner + "|" + other;
     }
 
-    private String permissionsOthers(FichierProtege fichier) {
+    private void enregistrerLog(
+            String login,
+            int fichierId,
+            String action,
+            String status) {
 
-        return ""
-                + (fichier.isOtherRead() ? "r" : "-")
-                + (fichier.isOtherWrite() ? "w" : "-")
-                + (fichier.isOtherDelete() ? "d" : "-");
-    }
+        User user =
+                userDAO.findByUsername(login);
 
-    // sauvgrader
-
-     private void sauvegarder() {
-
-        List<String> lines = new ArrayList<>();
-
-        for (FichierProtege fichier : fichiers.values()) {
-
-            String line =
-                    fichier.getNom()
-                    + ";"
-                    + fichier.getProprietaire()
-                    + ";"
-                    + permissionsOwner(fichier)
-                    + ";"
-                    + permissionsOthers(fichier);
-
-            lines.add(line);
+        if (user == null) {
+            return;
         }
 
-        try {
+        LogEntry log =
+                new LogEntry(
+                        0,
+                        user.getId(),
+                        fichierId,
+                        action,
+                        status,
+                        LocalDateTime.now().toString()
+                );
 
-            Files.createDirectories(fichiersPath.getParent());
-
-            Files.write(fichiersPath, lines);
-
-        } catch (IOException e) {
-
-            System.out.println("Erreur lors de la sauvegarde.");
-        }
+        logDAO.save(log);
     }
-
-    public boolean peutEcrire(String login, String nom) {
-
-    FichierProtege fichier = fichiers.get(nom);
-
-    if (fichier == null) {
-        return false;
-    }
-
-    return ControleAcces.estAutorise(
-            login,
-            fichier,
-            'w'
-    );
-}
-
 }

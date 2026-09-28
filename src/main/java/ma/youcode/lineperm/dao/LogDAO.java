@@ -113,21 +113,20 @@ public class LogDAO extends AbstractDao<LogEntry> {
     return 0;
 }
 
-public Map<Integer, Integer> actionsByUser() {
+public Map<String, Integer> actionsByUser() {
 
-    Map<Integer, Integer> resultats = new HashMap<>();
+    Map<String, Integer> resultats = new HashMap<>();
 
-    String sql = "SELECT user_id, COUNT(*) AS total FROM logs GROUP BY user_id ";
-
+String sql = "SELECT u.login, COUNT(*) AS total " +"FROM logs l " + "JOIN users u ON l.user_id = u.id " + "GROUP BY u.id, u.login";
     try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
         ResultSet result = statement.executeQuery();
 
         while (result.next()) {
-            int userId = result.getInt("user_id");
+            String login = result.getString("login");
             int total = result.getInt("total");
 
-            resultats.put(userId, total);
+            resultats.put(login, total);
         }
 
     } catch (SQLException e) {
