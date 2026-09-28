@@ -1,2 +1,3 @@
 sss.txt;sarra;rwd;---
+fichier;ssss;rwd;---
 sarra.txt;sarra;rwd;---

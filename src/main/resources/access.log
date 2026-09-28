@@ -1,1 +1,8 @@
 2026-09-25;16:40;sarra;ECRITURE;sss.txt;OK
+2026-09-28;14:52;ssss;LECTURE;fichier.txt;REFUSE
+2026-09-28;14:53;ssss;LECTURE;fichier.txt;REFUSE
+2026-09-28;14:53;ssss;LECTURE;fichier;OK
+2026-09-28;14:54;ssss;ECRITURE;test.txt;REFUSE
+2026-09-28;15:03;sarra;ECRITURE;test.txt;REFUSE
+2026-09-28;15:03;sarra;LECTURE;sss.txt;OK
+2026-09-28;15:04;sarra;ECRITURE;sss.txt;OK
