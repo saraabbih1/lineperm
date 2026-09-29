@@ -67,6 +67,9 @@ public long accesRefusesUtilisateur(String user) {
                     Collectors.counting()
             ));
 }
+//   public void getLogByActionAndFileNameToUpperCase(String  action){
+//     logs.stream().filter(a->a)
 
+//   }
     
 }
